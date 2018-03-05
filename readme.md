@@ -56,9 +56,9 @@ $dcydev> git clone https://github.com/LMDB/lmdb.git
 Create build directory inside Dinastycoin, go there and run CMake and Make:
 ```
 $dcydev> mkdir Dinastycoin/build
-$dcydev> cd Dinastycoin/build
-$dcydev/Dinastycoin/build> cmake ..
-$dcydev/Dinastycoin/build> time make -j4
+$dcydev> cd Dinastycoin
+$dcydev/Dinastycoin> time make -j4
+ 
 ```
 
 Check built binaries by running them from `../bin` folder
