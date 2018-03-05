@@ -8,7 +8,7 @@ Contents
 * Building on Linux 64-bit
 * Building on Mac OSX
 * Building on Windows
-* Building on other platforms
+
 
 ## Building on Linux 64-bit
 
@@ -60,32 +60,14 @@ $dcydev> cd Dinastycoin
 $dcydev/Dinastycoin> time make -j4
  
 ```
+note: in case you got error during compiling digit this:
+```
+$dcydev/Dinastycoin>chmod 777 -R external/rocksdb/build_tools/*
+```
 
 Check built binaries by running them from `../bin` folder
 ```
 $dcydev/Dinastycoin/build> ../bin/Dinastycoind -v
-```
-
-### Building with specific options
-
-Install OpenSSL to `dcydev/openssl` folder. (Use switch `linux-x86_64-clang` instead of `linux-x86_64` if using clang.)
-```
-$dcydev> git clone https://github.com/openssl/openssl.git
-$dcydev> cd openssl
-$dcydev/openssl> ./Configure linux-x86_64
-$dcydev/openssl> time make -j4
-$dcydev/openssl> cd ..
-```
-
-Download amalgamated [SQLite 3](https://www.sqlite.org/download.html) and unpack it into `dcydev/sqlite` folder (source files are referenced via relative paths, so you do not need to separately build it).
-
-Below are the commands which add OpenSSL support and switch from LMDB to SQLite by providing options to CMake:
-
-```
-$dcydev> mkdir Dinastycoin/build
-$dcydev> cd Dinastycoin/build
-$dcydev/Dinastycoin/build> cmake -DDinastycoin_SSL=1 -DDinastycoin_SQLITE=1 ..
-$dcydev/Dinastycoin/build> time make -j4
 ```
 
 ## Building on Mac OSX
@@ -145,37 +127,6 @@ $~/Downloads/boost_1_58_0> ./bootstrap.sh
 $~/Downloads/boost_1_58_0> ./b2 -a -j 4 cxxflags="-stdlib=libc++ -std=c++14 -mmacosx-version-min=10.11 -isysroot/Users/user/Downloads/MacOSX10.11.sdk" install`
 ```
 
-Install OpenSSL to `dcydev/openssl` folder:
-```
-$~/Downloads/dcydev> git clone https://github.com/openssl/openssl.git
-$~/Downloads/dcydev> cd openssl
-```
-
-If you need binaries to run on all versions of OS X starting from El Capitan, you need to build OpenSSL targeting El Capitan SDK.
-```
-$dcydev/openssl> ./Configure darwin64-x86_64-cc no-shared -mmacosx-version-min=10.11 -isysroot/Users/user/Downloads/MacOSX10.11.sdk
-```
-Otherwise just use
-```
-$dcydev/openssl> ./Configure darwin64-x86_64-cc no-shared
-```
-
-```
-$dcydev/openssl> time make -j4
-$dcydev/openssl> cd ..
-```
-
-Download amalgamated [SQLite 3](https://www.sqlite.org/download.html) and unpack it into `dcydev/sqlite` folder (source files are referenced via relative paths, so you do not need to separately build it).
-
-You add OpenSSL support or switch from LMDB to SQLite by providing options to CMake:
-
-```
-$dcydev> mkdir Dinastycoin/build
-$dcydev> cd Dinastycoin/build
-$dcydev/Dinastycoin/build> cmake -DDinastycoin_SSL=1 -DDinastycoin_SQLITE=1 ..
-$dcydev/Dinastycoin/build> time make -j4
-```
-
 ## Building on Windows
 
 You need Microsoft Visual Studio Community 2017. [Download](https://microsoft.com) and install it selecting `C++`, `git`, `cmake integration` packages.
@@ -219,22 +170,3 @@ Now launch Visual Studio, in File menu select `Open Folder`, select `C:\dcydev\D
 Wait until CMake finishes running and `Build` appears in main menu.
 Select `x64-Debug` or `x64-Release` from standard toolbar, and then `Build/Build Solution` from the main menu.
 
-You cannot add options to CMake running inside Visual Studio so just edit `CMakeLists.txt` and set `Dinastycoin_SSL` or `Dinastycoin_SQLITE` to `ON` if you wish to build with them.
-
-## Building on 32-bit x86 platforms, iOS, Android and other ARM platforms
-
-Dinastycoin works on 32-bit systems if SQLite is used instead of LMDB (we've experienced lots of problems building and running with lmdb in 32-bit compatibility mode, especially on iOS).
-
-Therefore SQLite option is automatically selected by CMake on 32-bit platforms and you must have SQLite downloaded as explained in appropriate sections above.
-
-We build official x86 32-bit version for Windows only, because there is zero demand for 32-bit version for Linux or Mac.
-
-Building source code for iOS, Android, Raspberry PI, etc is possible (we have experimental `Dinastycoind` and `walletd` running on ARM64 iPhone) but requires major skills on your part. __TBD__
-
-## Building on Big-Endian platforms
-
-Currently it is impossible to run Dinastycoin on any Big-Endian platform, due to lots of endianess-dependent code. This may be fixed in the future. If you wish to run on Big-Endian platform, please contact us.
-
-## Building with parameters
-
-If you want to use tools like `clang-tidy`, run `cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..` instead of `cmake ..` 
